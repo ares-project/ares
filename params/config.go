@@ -25,7 +25,7 @@ import (
 
 var (
 	// MainnetGenesisHash Mainnet genesis hash to enforce below configs on
-	MainnetGenesisHash = common.HexToHash("0x3ee0c5a2fe401b5744acb9d19578c72b964d35a4f412d527d106d82395249def")
+	MainnetGenesisHash = common.HexToHash("0xd001ee48e6b592af3ff292dbb9acfacf2c34b761d905a3f53919a357c27b4e19")
 
 	// TestnetGenesisHash Testnet genesis hash to enforce below configs on
 	TestnetGenesisHash = common.HexToHash("0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d")
@@ -43,7 +43,7 @@ var (
 		EIP155Block:    big.NewInt(1),
 		EIP158Block:    big.NewInt(1),
 		ByzantiumBlock: big.NewInt(0),
-		aresBlock:    big.NewInt(300000),
+		aresBlock:    big.NewInt(100),
 		Ethash:         new(EthashConfig),
 	}
 
