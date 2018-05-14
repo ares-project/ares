@@ -17,9 +17,9 @@ Section "Uninstall"
   rmDir "$SMPROGRAMS\${APPNAME}"
 
   # Firewall - remove rules if exists
-  SimpleFC::AdvRemoveRule "Geth incoming peers (TCP:30303)"
-  SimpleFC::AdvRemoveRule "Geth outgoing peers (TCP:30303)"
-  SimpleFC::AdvRemoveRule "Geth UDP discovery (UDP:30303)"
+  SimpleFC::AdvRemoveRule "Geth incoming peers (TCP:13990)"
+  SimpleFC::AdvRemoveRule "Geth outgoing peers (TCP:13990)"
+  SimpleFC::AdvRemoveRule "Geth UDP discovery (UDP:13990)"
 
   # Remove IPC endpoint (https://github.com/trinityfx/EIPs/issues/147)
   ${un.EnvVarUpdate} $0 "ETHEREUM_SOCKET" "R" "HKLM" "\\.\pipe\geth.ipc"
