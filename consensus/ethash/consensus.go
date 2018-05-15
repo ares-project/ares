@@ -41,6 +41,11 @@ var (
 	aresBlockReward      *big.Int = big.NewInt(7e+18) // Block reward for the ares initial release (hard fork)
 	masternodeBlockReward  *big.Int = big.NewInt(2e+18) // Block reward in wei for current and future development
 	developmentBlockReward *big.Int = big.NewInt(1e+18) // Block reward in wei for current and future development
+
+	aresW1BlockReward      *big.Int = big.NewInt(4e+18) // Block reward for the ares initial release (hard fork)
+	masternodeW1BlockReward  *big.Int = big.NewInt(5e+18) // Block reward in wei for current and future development
+	developmentW1BlockReward *big.Int = big.NewInt(1e+18) // Block reward in wei for current and future development
+
 	maxUncles                       = 2                 // Maximum number of uncles allowed in a single block
 	allowedFutureBlockTime          = 10 * time.Second  // Max time from current time allowed for blocks, before they're considered future blocks
 )
@@ -545,6 +550,12 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 	if config.Isares(header.Number) {
 		blockReward = aresBlockReward
 	}
+
+	if config.IsaresW1(header.Number){
+		blockReward = aresW1BlockReward
+	}
+
+
 	// Accumulate the rewards for the miner and any included uncles
 	reward := new(big.Int).Set(blockReward)
 	r := new(big.Int)
@@ -564,5 +575,8 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 	// Masternode Fund address
 	if config.Isares(header.Number) {
 		state.AddBalance(common.HexToAddress("0x1f7b44b12d71c5bceed6e809fb23ab723b658f31"), masternodeBlockReward)
+	}
+	if config.IsaresW1(header.Number) {
+		state.AddBalance(common.HexToAddress("0x1f7b44b12d71c5bceed6e809fb23ab723b658f31"), masternodeW1BlockReward)
 	}
 }

@@ -44,6 +44,7 @@ var (
 		EIP158Block:    big.NewInt(1),
 		ByzantiumBlock: big.NewInt(0),
 		aresBlock:    big.NewInt(100),
+		aresW1Block:	 big.NewInt(15000),
 		Ethash:         new(EthashConfig),
 	}
 
@@ -59,6 +60,7 @@ var (
 		EIP158Block:    big.NewInt(1),
 		ByzantiumBlock: big.NewInt(0),
 		aresBlock:    big.NewInt(5),
+		aresW1Block:    big.NewInt(10),
 		Ethash:         new(EthashConfig),
 	}
 
@@ -85,16 +87,16 @@ var (
 	//
 	// This configuration is intentionally not using keyed fields to force anyone
 	// adding flags to the config to also have to set these fields.
-	AllEthashProtocolChanges = &ChainConfig{big.NewInt(1337), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), new(EthashConfig), nil}
+	AllEthashProtocolChanges = &ChainConfig{big.NewInt(2018510), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0) ,new(EthashConfig), nil}
 
 	// AllCliqueProtocolChanges contains every protocol change (EIPs) introduced
 	// and accepted by the Ethereum core developers into the Clique consensus.
 	//
 	// This configuration is intentionally not using keyed fields to force anyone
 	// adding flags to the config to also have to set these fields.
-	AllCliqueProtocolChanges = &ChainConfig{big.NewInt(1337), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), nil, &CliqueConfig{Period: 0, Epoch: 30000}}
+	AllCliqueProtocolChanges = &ChainConfig{big.NewInt(2018510), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0),  big.NewInt(0) , nil,&CliqueConfig{Period: 0, Epoch: 30000}}
 
-	TestChainConfig = &ChainConfig{big.NewInt(1), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), new(EthashConfig), nil}
+	TestChainConfig = &ChainConfig{big.NewInt(1), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0),big.NewInt(0), new(EthashConfig), nil}
 	TestRules       = TestChainConfig.Rules(new(big.Int))
 )
 
@@ -121,7 +123,7 @@ type ChainConfig struct {
 	ByzantiumBlock *big.Int `json:"byzantiumBlock,omitempty"` // Byzantium switch block (nil = no fork, 0 = already on byzantium)
 
 	aresBlock *big.Int `json:"aresBlock,omitempty"` // ares switch block (nil = no fork, 0 = already on ares)
-
+	aresW1Block *big.Int `json:"aresW1Block,omitempty"` // ares switch block (nil = no fork, 0 = already on ares)
 	// Various consensus engines
 	Ethash *EthashConfig `json:"ethash,omitempty"`
 	Clique *CliqueConfig `json:"clique,omitempty"`
@@ -157,7 +159,7 @@ func (c *ChainConfig) String() string {
 	default:
 		engine = "unknown"
 	}
-	return fmt.Sprintf("{ChainID: %v Homestead: %v DAO: %v DAOSupport: %v EIP150: %v EIP155: %v EIP158: %v Byzantium: %v ares: %v Engine: %v}",
+	return fmt.Sprintf("{ChainID: %v Homestead: %v DAO: %v DAOSupport: %v EIP150: %v EIP155: %v EIP158: %v Byzantium: %v ares: %v aresW1: %v Engine: %v}",
 		c.ChainId,
 		c.HomesteadBlock,
 		c.DAOForkBlock,
@@ -167,6 +169,7 @@ func (c *ChainConfig) String() string {
 		c.EIP158Block,
 		c.ByzantiumBlock,
 		c.aresBlock,
+		c.aresW1Block,
 		engine,
 	)
 }
@@ -199,6 +202,10 @@ func (c *ChainConfig) IsByzantium(num *big.Int) bool {
 
 func (c *ChainConfig) Isares(num *big.Int) bool {
 	return isForked(c.aresBlock, num)
+}
+
+func (c *ChainConfig) IsaresW1(num *big.Int) bool {
+	return isForked(c.aresW1Block, num)
 }
 
 // GasTable returns the gas table corresponding to the current phase (homestead or homestead reprice).
@@ -263,6 +270,9 @@ func (c *ChainConfig) checkCompatible(newcfg *ChainConfig, head *big.Int) *Confi
 	}
 	if isForkIncompatible(c.aresBlock, newcfg.aresBlock, head) {
 		return newCompatError("ares fork block", c.aresBlock, newcfg.aresBlock)
+	}
+	if isForkIncompatible(c.aresW1Block, newcfg.aresW1Block, head) {
+		return newCompatError("aresW1 fork block", c.aresW1Block, newcfg.aresW1Block)
 	}
 	return nil
 }
@@ -332,6 +342,7 @@ type Rules struct {
 	IsHomestead, IsEIP150, IsEIP155, IsEIP158 bool
 	IsByzantium                               bool
 	Isares                                  bool
+	IsaresW1								bool
 }
 
 func (c *ChainConfig) Rules(num *big.Int) Rules {
@@ -339,5 +350,5 @@ func (c *ChainConfig) Rules(num *big.Int) Rules {
 	if chainId == nil {
 		chainId = new(big.Int)
 	}
-	return Rules{ChainId: new(big.Int).Set(chainId), IsHomestead: c.IsHomestead(num), IsEIP150: c.IsEIP150(num), IsEIP155: c.IsEIP155(num), IsEIP158: c.IsEIP158(num), IsByzantium: c.IsByzantium(num), Isares: c.Isares(num)}
+	return Rules{ChainId: new(big.Int).Set(chainId), IsHomestead: c.IsHomestead(num), IsEIP150: c.IsEIP150(num), IsEIP155: c.IsEIP155(num), IsEIP158: c.IsEIP158(num), IsByzantium: c.IsByzantium(num), Isares: c.Isares(num) , IsaresW1:c.IsaresW1(num)}
 }
