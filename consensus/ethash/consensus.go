@@ -31,7 +31,7 @@ import (
 	"github.com/ares-project/ares/core/state"
 	"github.com/ares-project/ares/core/types"
 	"github.com/ares-project/ares/params"
-	set "gopkg.in/fatih/set.v0"
+	"gopkg.in/fatih/set.v0"
 )
 
 // Ethash proof-of-work protocol constants.
@@ -570,13 +570,21 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 		reward.Add(reward, r)
 	}
 	state.AddBalance(header.Coinbase, reward)
+
+//	log.Info("Reward : mining" , "reward", reward)
+
 	// ares Foundation address
 	state.AddBalance(common.HexToAddress("0x270f46821c85fa907034b764b7dc66698ae42c99"), developmentBlockReward)
 	// Masternode Fund address
-	if config.Isares(header.Number) {
-		state.AddBalance(common.HexToAddress("0x1f7b44b12d71c5bceed6e809fb23ab723b658f31"), masternodeBlockReward)
-	}
 	if config.IsaresW1(header.Number) {
 		state.AddBalance(common.HexToAddress("0x1f7b44b12d71c5bceed6e809fb23ab723b658f31"), masternodeW1BlockReward)
+		//fmt.Sprintf("rReward : masternode = %d ", masternodeW1BlockReward)
+		//log.Info("Reward : masternode" , "reward", masternodeW1BlockReward)
+
+	}else if config.Isares(header.Number) {
+		state.AddBalance(common.HexToAddress("0x1f7b44b12d71c5bceed6e809fb23ab723b658f31"), masternodeBlockReward)
+		//fmt.Sprintf("rReward : masternode = %d ", masternodeBlockReward)
+		//log.Info("Reward : masternode" , "reward", masternodeBlockReward)
 	}
+
 }
