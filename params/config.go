@@ -43,8 +43,8 @@ var (
 		EIP155Block:    big.NewInt(1),
 		EIP158Block:    big.NewInt(1),
 		ByzantiumBlock: big.NewInt(0),
-		aresBlock:    big.NewInt(5000),
-		aresW1Block:	 big.NewInt(15000),
+		AresBlock:    big.NewInt(5000),
+		AresW1Block:	 big.NewInt(100000),
 		Ethash:         new(EthashConfig),
 	}
 
@@ -59,8 +59,8 @@ var (
 		EIP155Block:    big.NewInt(1),
 		EIP158Block:    big.NewInt(1),
 		ByzantiumBlock: big.NewInt(0),
-		aresBlock:    big.NewInt(5),
-		aresW1Block:    big.NewInt(10),
+		AresBlock:    big.NewInt(5),
+		AresW1Block:    big.NewInt(10),
 		Ethash:         new(EthashConfig),
 	}
 
@@ -122,8 +122,8 @@ type ChainConfig struct {
 
 	ByzantiumBlock *big.Int `json:"byzantiumBlock,omitempty"` // Byzantium switch block (nil = no fork, 0 = already on byzantium)
 
-	aresBlock *big.Int `json:"aresBlock,omitempty"` // ares switch block (nil = no fork, 0 = already on ares)
-	aresW1Block *big.Int `json:"aresW1Block,omitempty"` // ares switch block (nil = no fork, 0 = already on ares)
+	AresBlock *big.Int `json:"aresBlock,omitempty"` // ares switch block (nil = no fork, 0 = already on ares)
+	AresW1Block *big.Int `json:"aresW1Block,omitempty"` // ares switch block (nil = no fork, 0 = already on ares)
 	// Various consensus engines
 	Ethash *EthashConfig `json:"ethash,omitempty"`
 	Clique *CliqueConfig `json:"clique,omitempty"`
@@ -168,8 +168,8 @@ func (c *ChainConfig) String() string {
 		c.EIP155Block,
 		c.EIP158Block,
 		c.ByzantiumBlock,
-		c.aresBlock,
-		c.aresW1Block,
+		c.AresBlock,
+		c.AresW1Block,
 		engine,
 	)
 }
@@ -200,12 +200,12 @@ func (c *ChainConfig) IsByzantium(num *big.Int) bool {
 	return isForked(c.ByzantiumBlock, num)
 }
 
-func (c *ChainConfig) Isares(num *big.Int) bool {
-	return isForked(c.aresBlock, num)
+func (c *ChainConfig) IsAres(num *big.Int) bool {
+	return isForked(c.AresBlock, num)
 }
 
-func (c *ChainConfig) IsaresW1(num *big.Int) bool {
-	return isForked(c.aresW1Block, num)
+func (c *ChainConfig) IsAresW1(num *big.Int) bool {
+	return isForked(c.AresW1Block, num)
 }
 
 // GasTable returns the gas table corresponding to the current phase (homestead or homestead reprice).
@@ -268,11 +268,11 @@ func (c *ChainConfig) checkCompatible(newcfg *ChainConfig, head *big.Int) *Confi
 	if isForkIncompatible(c.ByzantiumBlock, newcfg.ByzantiumBlock, head) {
 		return newCompatError("Byzantium fork block", c.ByzantiumBlock, newcfg.ByzantiumBlock)
 	}
-	if isForkIncompatible(c.aresBlock, newcfg.aresBlock, head) {
-		return newCompatError("ares fork block", c.aresBlock, newcfg.aresBlock)
+	if isForkIncompatible(c.AresBlock, newcfg.AresBlock, head) {
+		return newCompatError("Ares fork block", c.AresBlock, newcfg.AresBlock)
 	}
-	if isForkIncompatible(c.aresW1Block, newcfg.aresW1Block, head) {
-		return newCompatError("aresW1 fork block", c.aresW1Block, newcfg.aresW1Block)
+	if isForkIncompatible(c.AresW1Block, newcfg.AresW1Block, head) {
+		return newCompatError("AresW1 fork block", c.AresW1Block, newcfg.AresW1Block)
 	}
 	return nil
 }
@@ -341,8 +341,8 @@ type Rules struct {
 	ChainId                                   *big.Int
 	IsHomestead, IsEIP150, IsEIP155, IsEIP158 bool
 	IsByzantium                               bool
-	Isares                                  bool
-	IsaresW1								bool
+	IsAres                                  bool
+	IsAresW1								bool
 }
 
 func (c *ChainConfig) Rules(num *big.Int) Rules {
@@ -350,5 +350,5 @@ func (c *ChainConfig) Rules(num *big.Int) Rules {
 	if chainId == nil {
 		chainId = new(big.Int)
 	}
-	return Rules{ChainId: new(big.Int).Set(chainId), IsHomestead: c.IsHomestead(num), IsEIP150: c.IsEIP150(num), IsEIP155: c.IsEIP155(num), IsEIP158: c.IsEIP158(num), IsByzantium: c.IsByzantium(num), Isares: c.Isares(num) , IsaresW1:c.IsaresW1(num)}
+	return Rules{ChainId: new(big.Int).Set(chainId), IsHomestead: c.IsHomestead(num), IsEIP150: c.IsEIP150(num), IsEIP155: c.IsEIP155(num), IsEIP158: c.IsEIP158(num), IsByzantium: c.IsByzantium(num), IsAres: c.IsAres(num) ,IsAresW1: c.IsAresW1(num) }
 }

@@ -548,11 +548,11 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 	if config.IsByzantium(header.Number) {
 		blockReward = ByzantiumBlockReward
 	}
-	if config.Isares(header.Number) {
+	if config.IsAres(header.Number) {
 		blockReward = aresBlockReward
 	}
 
-	if config.IsaresW1(header.Number){
+	if config.IsAresW1(header.Number){
 		blockReward = aresW1BlockReward
 	}
 
@@ -577,9 +577,9 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 	// ares Foundation address
 	state.AddBalance(common.HexToAddress("0x270f46821c85fa907034b764b7dc66698ae42c99"), developmentBlockReward)
 	// Masternode Fund address
-	if config.IsaresW1(header.Number) {
+	if config.IsAresW1(header.Number) {
 		state.AddBalance(common.HexToAddress("0x1f7b44b12d71c5bceed6e809fb23ab723b658f31"), masternodeW1BlockReward)
-	}else if config.Isares(header.Number) {
+	}else if config.IsAres(header.Number) {
 		state.AddBalance(common.HexToAddress("0x1f7b44b12d71c5bceed6e809fb23ab723b658f31"), masternodeBlockReward)
 
 	}
