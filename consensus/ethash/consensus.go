@@ -46,8 +46,9 @@ var (
 	masternodeW1BlockReward  *big.Int = big.NewInt(5e+18) // Block reward in wei for current and future development
 	developmentW1BlockReward *big.Int = big.NewInt(1e+18) // Block reward in wei for current and future development
 
+
 	maxUncles                       = 2                 // Maximum number of uncles allowed in a single block
-	allowedFutureBlockTime          = 10 * time.Second  // Max time from current time allowed for blocks, before they're considered future blocks
+	allowedFutureBlockTime          = 12 * time.Second  // Max time from current time allowed for blocks, before they're considered future blocks
 )
 
 // Various error messages to mark blocks invalid. These should be private to
@@ -578,13 +579,9 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 	// Masternode Fund address
 	if config.IsaresW1(header.Number) {
 		state.AddBalance(common.HexToAddress("0x1f7b44b12d71c5bceed6e809fb23ab723b658f31"), masternodeW1BlockReward)
-		//fmt.Sprintf("rReward : masternode = %d ", masternodeW1BlockReward)
-		//log.Info("Reward : masternode" , "reward", masternodeW1BlockReward)
-
 	}else if config.Isares(header.Number) {
 		state.AddBalance(common.HexToAddress("0x1f7b44b12d71c5bceed6e809fb23ab723b658f31"), masternodeBlockReward)
-		//fmt.Sprintf("rReward : masternode = %d ", masternodeBlockReward)
-		//log.Info("Reward : masternode" , "reward", masternodeBlockReward)
+
 	}
 
 }

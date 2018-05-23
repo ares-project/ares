@@ -123,6 +123,7 @@ type newBlockHashesData []struct {
 	Number uint64      // Number of one particular block being announced
 }
 
+
 // getBlockHeadersData represents a block header query.
 type getBlockHeadersData struct {
 	Origin  hashOrNumber // Block from which to retrieve headers
