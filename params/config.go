@@ -43,8 +43,8 @@ var (
 		EIP155Block:    big.NewInt(1),
 		EIP158Block:    big.NewInt(1),
 		ByzantiumBlock: big.NewInt(0),
-		AresBlock:    big.NewInt(1000),
-		AresW1Block:	 big.NewInt(3000),
+		AresBlock:    big.NewInt(10000),
+		AresW1Block:	 big.NewInt(100000),
 		Ethash:         new(EthashConfig),
 	}
 
